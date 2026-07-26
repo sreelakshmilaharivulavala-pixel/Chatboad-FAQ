@@ -1,0 +1,10 @@
+# Ignore environment variables and large backup files
+.env
+workspace-*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node / npm artefacts (if any)
+node_modules/
