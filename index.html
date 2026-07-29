@@ -3,94 +3,850 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FAQ Chatbot - {{ product }}</title>
+  <title>AeroBook Pro | AI FAQ Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-    :root { --primary: #6366f1; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --muted: #94a3b8; }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-    body { background: radial-gradient(1200px 800px at 10% -10%, #6366f1 0%, transparent 40%), radial-gradient(1200px 800px at 110% 120%, #8b5cf6 0%, transparent 40%), var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 3rem 1rem; }
-    header { text-align: center; margin-bottom: 2rem; }
-    header h1 { font-weight: 800; font-size: 2.5rem; letter-spacing: -0.03em; background: linear-gradient(135deg, #fff 30%, #c7d2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    header p { color: var(--muted); margin-top: 0.5rem; }
-    .chat-container { width: 100%; max-width: 720px; background: var(--card); border: 1px solid rgba(255,255,255,0.06); border-radius: 1.5rem; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); backdrop-filter: blur(12px); }
-    .messages { height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; padding-right: 0.25rem; }
-    .message { max-width: 85%; padding: 1rem 1.25rem; border-radius: 1.25rem; line-height: 1.6; font-size: 0.95rem; animation: fadeIn 0.3s ease; }
-    .message.user { align-self: flex-end; background: linear-gradient(135deg, var(--primary), #8b5cf6); color: #fff; border-bottom-right-radius: 0.25rem; }
-    .message.bot { align-self: flex-start; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-bottom-left-radius: 0.25rem; color: var(--text); }
-    .message .meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.35rem; opacity: 0.8; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    .input-area { display: flex; gap: 0.75rem; }
-    .input-area input { flex: 1; padding: 1rem 1.25rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: var(--text); font-size: 1rem; outline: none; transition: border-color 0.2s; }
-    .input-area input:focus { border-color: var(--primary); }
-    .input-area button { padding: 1rem 1.5rem; border-radius: 1rem; border: none; background: linear-gradient(135deg, var(--primary), #8b5cf6); color: #fff; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
-    .input-area button:hover { transform: translateY(-2px); }
-    .suggestions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .suggestions button { padding: 0.5rem 0.75rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); color: var(--muted); font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
-    .suggestions button:hover { border-color: var(--primary); color: var(--text); }
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --secondary: #8b5cf6;
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-solid: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --bot-msg-bg: rgba(255, 255, 255, 0.05);
+      --user-msg-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(1000px 700px at 15% -10%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
+        radial-gradient(1000px 700px at 85% 110%, rgba(139, 92, 246, 0.2) 0%, transparent 50%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .app-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      max-width: 760px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+      font-size: 0.825rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+
+    .app-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 40%, #c7d2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .app-header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .main-layout {
+      width: 100%;
+      max-width: 850px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .chat-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chat-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1rem;
+    }
+
+    .product-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .product-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: white;
+    }
+
+    .product-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .product-sub {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 0.9rem;
+      border-radius: 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .suggestions-bar {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      scrollbar-width: thin;
+    }
+
+    .suggestions-bar::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .suggestions-bar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .suggestion-chip {
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .suggestion-chip:hover {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: rgba(99, 102, 241, 0.4);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-right: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .messages-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .messages-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+    }
+
+    .message-wrapper {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 85%;
+      animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message-wrapper.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .message-wrapper.bot {
+      align-self: flex-start;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .avatar.bot {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .avatar.user {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+    }
+
+    .message-bubble {
+      padding: 0.9rem 1.15rem;
+      border-radius: 1.25rem;
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      position: relative;
+    }
+
+    .message-wrapper.user .message-bubble {
+      background: var(--user-msg-gradient);
+      color: white;
+      border-bottom-right-radius: 0.25rem;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .message-wrapper.bot .message-bubble {
+      background: var(--bot-msg-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-bottom-left-radius: 0.25rem;
+    }
+
+    .msg-meta {
+      font-size: 0.725rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .confidence-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.7rem;
+    }
+
+    .confidence-high {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .confidence-medium {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .confidence-low {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 0.75rem;
+      position: relative;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 0.35rem 0.35rem 0.35rem 1rem;
+      align-items: center;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .input-wrapper input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      padding: 0.5rem 0;
+    }
+
+    .input-wrapper input::placeholder {
+      color: #64748b;
+    }
+
+    .send-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .send-btn:hover {
+      opacity: 0.92;
+      transform: scale(1.02);
+    }
+
+    .send-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* FAQ List Modal / Drawer */
+    .faq-drawer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-card-solid);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .faq-drawer.open {
+      transform: translateY(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .drawer-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .faq-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding-right: 0.5rem;
+    }
+
+    .faq-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .faq-item:hover {
+      background: rgba(99, 102, 241, 0.08);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .faq-q {
+      font-weight: 600;
+      font-size: 0.925rem;
+      margin-bottom: 0.4rem;
+      color: #e2e8f0;
+    }
+
+    .faq-a {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>FAQ Chatbot — {{ product }}</h1>
-    <p>NLP-powered answers using TF-IDF + Cosine Similarity (SpaCy / NLTK)</p>
+
+  <header class="app-header">
+    <div class="badge">
+      <span class="status-dot"></span>
+      NLP-Powered Engine Active
+    </div>
+    <h1>AeroBook Pro Assistant</h1>
+    <p>Get instant answers regarding battery, warranty, storage, ports, display, and returns.</p>
   </header>
 
-  <main class="chat-container">
-    <div class="suggestions" id="suggestions"></div>
-    <div class="messages" id="messages">
-      <div class="message bot">
-        Hi! I'm the {{ product }} assistant. Ask me anything about battery, warranty, storage, ports, display, weight, or returns.
-        <div class="meta">Type a question below or click a suggestion.</div>
+  <main class="main-layout">
+    <div class="chat-card">
+
+      <!-- Header Toolbar -->
+      <div class="chat-toolbar">
+        <div class="product-info">
+          <div class="product-icon">💻</div>
+          <div>
+            <div class="product-title">AeroBook Pro Support</div>
+            <div class="product-sub">TF-IDF &amp; Cosine Similarity Search</div>
+          </div>
+        </div>
+        <button class="btn-secondary" id="toggleFaqBtn" onclick="toggleFaqDrawer()">
+          📚 View All FAQs (<span id="faqCount">10</span>)
+        </button>
       </div>
+
+      <!-- Quick Suggestion Chips -->
+      <div class="suggestions-bar" id="suggestionsBar">
+        <!-- Dynamic chips inserted by JS -->
+      </div>
+
+      <!-- Chat Messages Container -->
+      <div class="messages-container" id="messagesContainer">
+        <!-- Initial bot message -->
+        <div class="message-wrapper bot">
+          <div class="avatar bot">🤖</div>
+          <div>
+            <div class="message-bubble">
+              Hello! 👋 I'm your AeroBook Pro virtual assistant. Ask me anything about specifications, battery life, warranty, upgrade options, or returns!
+            </div>
+            <div class="msg-meta">
+              <span>Just now</span>
+              <span>• Click a suggestion above or type below</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Bar -->
+      <form class="input-wrapper" onsubmit="handleSend(event)">
+        <input type="text" id="userInput" placeholder="Ask a question (e.g. 'How long is the warranty?')" autocomplete="off" />
+        <button type="submit" class="send-btn">
+          <span>Send</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+
+      <!-- FAQ Drawer -->
+      <div class="faq-drawer" id="faqDrawer">
+        <div class="drawer-header">
+          <div class="drawer-title">Frequently Asked Questions</div>
+          <button class="btn-secondary" onclick="toggleFaqDrawer()">✕ Close</button>
+        </div>
+        <div class="faq-list" id="faqList">
+          <!-- Dynamic FAQ items -->
+        </div>
+      </div>
+
     </div>
-    <form class="input-area" onsubmit="sendMessage(event)">
-      <input type="text" id="userInput" placeholder="Ask a question..." autocomplete="off" />
-      <button type="submit">Send</button>
-    </form>
   </main>
 
   <script>
-    const suggestions = [
-      "How long does the battery last?",
-      "What is the warranty period?",
-      "Does it support external monitors?",
-      "What are the storage options?",
-      "How heavy is the laptop?"
+    // FAQ Data definition
+    const FAQ_DATA = [
+      {
+        question: "How long does the battery last?",
+        answer: "The AeroBook Pro offers up to 14 hours of mixed-use battery life on a single charge, with fast charging to 80% in 45 minutes."
+      },
+      {
+        question: "What is the warranty period?",
+        answer: "It comes with a standard 2-year limited warranty covering manufacturing defects, with optional 3-year extended protection plans available."
+      },
+      {
+        question: "Does it support external monitors?",
+        answer: "Yes, via Thunderbolt 4 and HDMI 2.1 ports, it supports up to two 4K external displays at 60Hz simultaneously."
+      },
+      {
+        question: "What are the storage options?",
+        answer: "Configurations include 512GB, 1TB, and 2TB PCIe Gen 4 NVMe SSDs, all user-replaceable."
+      },
+      {
+        question: "Is the RAM upgradeable?",
+        answer: "The base model has 16GB soldered LPDDR5. The Pro and Max variants include an open SODIMM slot for upgrades up to 64GB total."
+      },
+      {
+        question: "What operating systems are supported?",
+        answer: "It ships with AeroOS (Linux-based). Windows 11 and Ubuntu LTS are fully certified and can be installed via dual-boot or clean install."
+      },
+      {
+        question: "How heavy is the laptop?",
+        answer: "The magnesium alloy chassis weighs just 1.15 kg (2.54 lbs) with the standard battery, making it one of the lightest 14-inch laptops."
+      },
+      {
+        question: "Does it have a touchscreen?",
+        answer: "Yes, the 14-inch OLED display is a 10-point multi-touch screen with 400 nits peak brightness and 100% DCI-P3 color gamut."
+      },
+      {
+        question: "What ports are included?",
+        answer: "Two Thunderbolt 4 ports, one USB-A 3.2 Gen 2, full-size HDMI 2.1, microSD reader, and a 3.5mm audio combo jack."
+      },
+      {
+        question: "Can I return it if I don't like it?",
+        answer: "Yes, there is a 30-day no-questions-asked return policy for orders placed through the official store, provided the device is in original condition."
+      }
     ];
-    const sugContainer = document.getElementById('suggestions');
-    suggestions.forEach(s => {
-      const btn = document.createElement('button');
-      btn.textContent = s;
-      btn.onclick = () => { document.getElementById('userInput').value = s; sendMessage(new Event('submit')); };
-      sugContainer.appendChild(btn);
+
+    // Pre-calculate tokens for client-side NLP matching engine
+    function tokenize(text) {
+      return text.toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '')
+        .split(/\s+/)
+        .filter(t => t.length > 2 && !['the','what','how','does','and','for','with','are','can','you','this','that','is','it'].includes(t));
+    }
+
+    const preprocessedFaqs = FAQ_DATA.map(item => ({
+      ...item,
+      tokens: tokenize(item.question + ' ' + item.answer)
+    }));
+
+    // Client-side Jaccard / Cosine TF-IDF approximation engine
+    function findBestMatch(userQuery) {
+      const qTokens = tokenize(userQuery);
+      if (qTokens.length === 0) {
+        return {
+          answer: "Please ask a specific question about AeroBook Pro battery, warranty, storage, ports, display, weight, or returns.",
+          confidence: 0,
+          matched_faq: null
+        };
+      }
+
+      let bestScore = 0;
+      let bestIdx = -1;
+
+      preprocessedFaqs.forEach((faq, idx) => {
+        let intersection = 0;
+        qTokens.forEach(t => {
+          if (faq.tokens.includes(t)) intersection++;
+        });
+
+        // Score based on token overlap relative to query length
+        const score = intersection / Math.sqrt(qTokens.length * (faq.tokens.length || 1));
+        if (score > bestScore) {
+          bestScore = score;
+          bestIdx = idx;
+        }
+      });
+
+      // Normalize score between 0 and 1
+      const normalizedScore = Math.min(1.0, bestScore * 1.5);
+
+      if (normalizedScore < 0.2 || bestIdx === -1) {
+        return {
+          answer: "I'm not completely sure about that. Try asking specifically about battery life, warranty period, external monitor support, RAM/storage upgrades, ports, weight, or returns.",
+          confidence: normalizedScore,
+          matched_faq: null
+        };
+      }
+
+      return {
+        answer: FAQ_DATA[bestIdx].answer,
+        confidence: normalizedScore,
+        matched_faq: FAQ_DATA[bestIdx].question
+      };
+    }
+
+    // UI Initializer
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSuggestions();
+      renderFaqDrawerItems();
     });
 
-    async function sendMessage(e) {
+    function renderSuggestions() {
+      const bar = document.getElementById('suggestionsBar');
+      const sampleQueries = [
+        "🔋 Battery life?",
+        "🛡️ Warranty period?",
+        "🖥️ External monitors?",
+        "💾 Upgrade RAM & Storage?",
+        "🔌 Ports list?",
+        "⚖️ Laptop weight?",
+        "🔄 Return policy?"
+      ];
+
+      sampleQueries.forEach(text => {
+        const chip = document.createElement('button');
+        chip.className = 'suggestion-chip';
+        chip.innerHTML = text;
+        chip.onclick = () => {
+          const cleanText = text.replace(/^[^\w]+/, '').trim();
+          document.getElementById('userInput').value = cleanText;
+          handleSend(new Event('submit'));
+        };
+        bar.appendChild(chip);
+      });
+    }
+
+    function renderFaqDrawerItems() {
+      const container = document.getElementById('faqList');
+      container.innerHTML = '';
+      FAQ_DATA.forEach(faq => {
+        const item = document.createElement('div');
+        item.className = 'faq-item';
+        item.innerHTML = `
+          <div class="faq-q">${faq.question}</div>
+          <div class="faq-a">${faq.answer}</div>
+        `;
+        item.onclick = () => {
+          toggleFaqDrawer();
+          askQuestion(faq.question);
+        };
+        container.appendChild(item);
+      });
+    }
+
+    function toggleFaqDrawer() {
+      document.getElementById('faqDrawer').classList.toggle('open');
+    }
+
+    async function handleSend(e) {
       e.preventDefault();
       const input = document.getElementById('userInput');
-      const msg = input.value.trim();
-      if (!msg) return;
-      const messages = document.getElementById('messages');
-      messages.innerHTML += `<div class="message user">${msg}</div>`;
-      input.value = '';
-      messages.scrollTop = messages.scrollHeight;
+      const text = input.value.trim();
+      if (!text) return;
 
+      input.value = '';
+      await askQuestion(text);
+    }
+
+    async function askQuestion(text) {
+      appendUserMessage(text);
+      const typingId = showTypingIndicator();
+
+      let result;
       try {
+        // Try calling server API if running via Flask app
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1200);
+        
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: msg })
+          body: JSON.stringify({ message: text }),
+          signal: controller.signal
         });
-        const data = await res.json();
-        messages.innerHTML += `
-          <div class="message bot">
-            ${data.answer}
-            <div class="meta">Matched: "${data.matched_faq}" · Confidence: ${(data.confidence * 100).toFixed(1)}%</div>
-          </div>`;
+        clearTimeout(timeoutId);
+        
+        if (res.ok) {
+          result = await res.json();
+        } else {
+          result = findBestMatch(text);
+        }
       } catch (err) {
-        messages.innerHTML += `<div class="message bot">Sorry, something went wrong. Try again.</div>`;
+        // Fallback to client-side NLP matching
+        result = findBestMatch(text);
       }
-      messages.scrollTop = messages.scrollHeight;
+
+      removeTypingIndicator(typingId);
+      appendBotMessage(result);
+    }
+
+    function appendUserMessage(text) {
+      const container = document.getElementById('messagesContainer');
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const wrapper = document.createElement('div');
+      wrapper.className = 'message-wrapper user';
+      wrapper.innerHTML = `
+        <div class="avatar user">👤</div>
+        <div>
+          <div class="message-bubble">${escapeHtml(text)}</div>
+          <div class="msg-meta" style="justify-content: flex-end;">${time}</div>
+        </div>
+      `;
+      container.appendChild(wrapper);
+      scrollToBottom();
+    }
+
+    function showTypingIndicator() {
+      const container = document.getElementById('messagesContainer');
+      const id = 'typing-' + Date.now();
+      const wrapper = document.createElement('div');
+      wrapper.id = id;
+      wrapper.className = 'message-wrapper bot';
+      wrapper.innerHTML = `
+        <div class="avatar bot">🤖</div>
+        <div class="message-bubble">
+          <div class="typing-indicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      `;
+      container.appendChild(wrapper);
+      scrollToBottom();
+      return id;
+    }
+
+    function removeTypingIndicator(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    function appendBotMessage(data) {
+      const container = document.getElementById('messagesContainer');
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      let confidenceHtml = '';
+      if (data.confidence !== undefined && data.confidence > 0) {
+        const pct = Math.round(data.confidence * 100);
+        let badgeClass = 'confidence-high';
+        if (pct < 50) badgeClass = 'confidence-low';
+        else if (pct < 75) badgeClass = 'confidence-medium';
+
+        confidenceHtml = `<span class="confidence-badge ${badgeClass}">${pct}% Match</span>`;
+      }
+
+      let matchedHtml = '';
+      if (data.matched_faq) {
+        matchedHtml = `<span>Matched: "${escapeHtml(data.matched_faq)}"</span>`;
+      }
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'message-wrapper bot';
+      wrapper.innerHTML = `
+        <div class="avatar bot">🤖</div>
+        <div>
+          <div class="message-bubble">${escapeHtml(data.answer)}</div>
+          <div class="msg-meta">
+            <span>${time}</span>
+            ${confidenceHtml}
+            ${matchedHtml}
+          </div>
+        </div>
+      `;
+      container.appendChild(wrapper);
+      scrollToBottom();
+    }
+
+    function scrollToBottom() {
+      const container = document.getElementById('messagesContainer');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
   </script>
 </body>
