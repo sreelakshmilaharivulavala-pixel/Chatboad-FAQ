@@ -1,0 +1,45 @@
+{
+  "product": "AeroBook Pro",
+  "faqs": [
+    {
+      "question": "How long does the battery last?",
+      "answer": "The AeroBook Pro offers up to 14 hours of mixed-use battery life on a single charge, with fast charging to 80% in 45 minutes."
+    },
+    {
+      "question": "What is the warranty period?",
+      "answer": "It comes with a standard 2-year limited warranty covering manufacturing defects, with optional 3-year extended protection plans available."
+    },
+    {
+      "question": "Does it support external monitors?",
+      "answer": "Yes, via Thunderbolt 4 and HDMI 2.1 ports, it supports up to two 4K external displays at 60Hz simultaneously."
+    },
+    {
+      "question": "What are the storage options?",
+      "answer": "Configurations include 512GB, 1TB, and 2TB PCIe Gen 4 NVMe SSDs, all user-replaceable."
+    },
+    {
+      "question": "Is the RAM upgradeable?",
+      "answer": "The base model has 16GB soldered LPDDR5. The Pro and Max variants include an open SODIMM slot for upgrades up to 64GB total."
+    },
+    {
+      "question": "What operating systems are supported?",
+      "answer": "It ships with AeroOS (Linux-based). Windows 11 and Ubuntu LTS are fully certified and can be installed via dual-boot or clean install."
+    },
+    {
+      "question": "How heavy is the laptop?",
+      "answer": "The magnesium alloy chassis weighs just 1.15 kg (2.54 lbs) with the standard battery, making it one of the lightest 14-inch laptops."
+    },
+    {
+      "question": "Does it have a touchscreen?",
+      "answer": "Yes, the 14-inch OLED display is a 10-point multi-touch screen with 400 nits peak brightness and 100% DCI-P3 color gamut."
+    },
+    {
+      "question": "What ports are included?",
+      "answer": "Two Thunderbolt 4 ports, one USB-A 3.2 Gen 2, full-size HDMI 2.1, microSD reader, and a 3.5mm audio combo jack."
+    },
+    {
+      "question": "Can I return it if I don't like it?",
+      "answer": "Yes, there is a 30-day no-questions-asked return policy for orders placed through the official store, provided the device is in original condition."
+    }
+  ]
+}

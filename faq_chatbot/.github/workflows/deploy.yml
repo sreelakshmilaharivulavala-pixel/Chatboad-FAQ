@@ -1,0 +1,21 @@
+name: Deploy FAQ Chatbot
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          python -m spacy download en_core_web_sm
+      - name: Deploy to Render (manual trigger or use Render deploy hook)
+        run: echo "Deploy via Render webhook or push trigger. App configured in render.yaml."
