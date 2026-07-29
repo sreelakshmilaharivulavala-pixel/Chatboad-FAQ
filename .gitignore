@@ -8,3 +8,7 @@ Thumbs.db
 
 # Node / npm artefacts (if any)
 node_modules/
+
+# Local git config backup
+.gitconfig
+
